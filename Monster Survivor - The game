@@ -1,0 +1,118 @@
+
+#SETUP
+
+#IMPORTS
+import time
+import pygame
+from pygame import mixer
+from random import randrange
+pygame.init()
+#SCREEN
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+#MUSIC AND BACKGROUNDS AS WELL AS PLAYERS & ENEMIES
+
+image = pygame.image.load('backgroundimage.jpeg')
+mixer.music.load('backgroundMUSIC.mp3')
+mixer.music.play(-1)
+pygame.display.set_caption("MONSTER SURVIVOR - SURVIVE THE MONSTERS")
+enemy = pygame.image.load('enemy.png')
+player = pygame.image.load('gamecharacter1.png')
+DEATH = pygame.image.load('BOOM.png')
+
+
+
+#OPTION OF PLAYERS AND SETUP
+
+x = (SCREEN_WIDTH * 0.95)
+y = (SCREEN_HEIGHT * 0.5)
+player_move_amount = 10
+y_change = 0
+player_x_pos = (SCREEN_WIDTH * 0.5)
+player_y_pos = (SCREEN_HEIGHT * 0.5)
+enemy_x_pos = 0
+enemy_y_pos = randrange(600)
+enemy_speed = 10
+
+#DEFINES
+def add_enemy_at_position(x,y):
+    game_display.blit(enemy, (x,y))
+
+def add_player_at_location(x,y):
+    game_display.blit(player, (x,y))
+
+def add_player2_at_location(x,y):
+    game_display.blit(player2, (x,y))
+
+width_of_player = 60
+width_of_enemy = 60
+height_of_player = 91
+height_of_enemy = 91
+
+def collison_has_occured():
+    enemy_top_right_x = enemy_y_pos + width_of_enemy
+    enemy_top_right_y = enemy_y_pos
+    enemy_bottom_right_x = enemy_x_pos + width_of_enemy
+    enemy_bottom_right_y = enemy_y_pos - height_of_enemy
+
+    player_top_left_x = x
+    player_top_left_y = y
+    player_bottom_left_x = x
+    player_bottom_left_y = y - height_of_player
+
+    if enemy_bottom_right_x >= player_top_left_x and enemy_bottom_right_y <= player_top_left_y and enemy_bottom_right_y >= player_bottom_left_y:
+        return True
+    
+    if enemy_top_right_x >= player_top_left_x and enemy_top_right_y <= player_top_left_y and enemy_top_right_y >= player_bottom_left_y:
+        return True
+
+    return False
+
+
+
+player = pygame.image.load('gamecharacter1.png')
+ 
+
+#GAME LOOP
+
+running = True
+while running:
+    screen.fill((0, 0 ,0))
+    screen.blit(image,(0, 0))
+    screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
+    screen.blit(player, (player_x_pos, player_y_pos))
+    
+    #QUIT
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP: #PLAYER UP
+                y_change = -player_move_amount
+            elif event.key == pygame.K_DOWN: #PLAYER DOWN
+                y_change = player_move_amount
+            elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                y_change = 0
+
+        player_y_pos += y_change
+         
+        
+    enemy_x_pos += enemy_speed
+    if enemy_x_pos > 800:
+        enemy_x_pos = 0
+        enemy_y_pos = randrange(600)
+
+   
+    if collison_has_occured():
+        screen.blit(DEATH,(0, 0))
+        running = False
+        print("YOU DIE!!!!")
+        
+
+    pygame.display.update()
+    
+pygame.quit()
+
+       
+
