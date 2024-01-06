@@ -1,4 +1,8 @@
-
+print("MADE BY APROX GAMES")
+print("")
+print("")
+print("IF ANY BUGS OR ERRORS PLEASE SEND THEM TO: arthur.keller.2012@icloud.com")
+print("CREDITS: LEADING PROGRAMMER: ARTHUR KELLER. I THANK MY DAD FOR MAKING THIS POSSIBLE.")
 #SETUP
 
 #IMPORTS
@@ -30,43 +34,39 @@ y = (SCREEN_HEIGHT * 0.5)
 player_move_amount = 10
 y_change = 0
 player_x_pos = (SCREEN_WIDTH * 0.5)
-player_y_pos = (SCREEN_HEIGHT * 0.5)
+player_y_pos = 300
 enemy_x_pos = 0
 enemy_y_pos = randrange(600)
-enemy_speed = 10
+enemy_speed = 2
 
 #DEFINES
 def add_enemy_at_position(x,y):
-    game_display.blit(enemy, (x,y))
+    screen.blit(enemy, (x,y))
 
 def add_player_at_location(x,y):
-    game_display.blit(player, (x,y))
+    screen.blit(player, (x,y))
 
-def add_player2_at_location(x,y):
-    game_display.blit(player2, (x,y))
-
-width_of_player = 60
-width_of_enemy = 60
-height_of_player = 91
-height_of_enemy = 91
 
 def collison_has_occured():
-    enemy_top_right_x = enemy_y_pos + width_of_enemy
-    enemy_top_right_y = enemy_y_pos
-    enemy_bottom_right_x = enemy_x_pos + width_of_enemy
-    enemy_bottom_right_y = enemy_y_pos - height_of_enemy
+    width_of_player = 50
+    width_of_enemy = 120
+    height_of_player = 50
+    height_of_enemy = 120
 
-    player_top_left_x = x
-    player_top_left_y = y
-    player_bottom_left_x = x
-    player_bottom_left_y = y - height_of_player
+    enemy_top = enemy_y_pos
+    enemy_left = enemy_x_pos
+    enemy_right = enemy_x_pos + width_of_enemy
+    enemy_bottom = enemy_y_pos + height_of_enemy
 
-    if enemy_bottom_right_x >= player_top_left_x and enemy_bottom_right_y <= player_top_left_y and enemy_bottom_right_y >= player_bottom_left_y:
+    player_top = player_y_pos
+    player_left = player_x_pos
+    player_bottom = player_y_pos + height_of_player
+    player_right = player_x_pos + width_of_player
+
+    if player_left >= enemy_left and player_left <= enemy_right and player_top >= enemy_top and player_top <= enemy_bottom:
         return True
-    
-    if enemy_top_right_x >= player_top_left_x and enemy_top_right_y <= player_top_left_y and enemy_top_right_y >= player_bottom_left_y:
+    if player_right >= enemy_left and player_right <= enemy_right and player_bottom >= enemy_top and player_bottom <= enemy_bottom:
         return True
-
     return False
 
 
@@ -80,39 +80,40 @@ running = True
 while running:
     screen.fill((0, 0 ,0))
     screen.blit(image,(0, 0))
-    screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
-    screen.blit(player, (player_x_pos, player_y_pos))
+    add_enemy_at_position(enemy_x_pos, enemy_y_pos)
+    add_player_at_location(player_x_pos, player_y_pos)
     
     #QUIT
+    y_change = 0
+    
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT: 
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP: #PLAYER UP
-                y_change = -player_move_amount
-            elif event.key == pygame.K_DOWN: #PLAYER DOWN
-                y_change = player_move_amount
-            elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                y_change = 0
-
+            if event.key == pygame.K_UP and player_y_pos >= 0: #PLAYER UP
+                y_change = -30
+            elif event.key == pygame.K_DOWN and player_y_pos <= 600: #PLAYER DOWN
+                y_change = 30
+        
+        
         player_y_pos += y_change
          
         
-    enemy_x_pos += enemy_speed
+    enemy_x_pos += enemy_speed #ENEMY SPEED
     if enemy_x_pos > 800:
         enemy_x_pos = 0
         enemy_y_pos = randrange(600)
 
    
-    if collison_has_occured():
+    if collison_has_occured(): #COLLISION
         screen.blit(DEATH,(0, 0))
         running = False
         print("YOU DIE!!!!")
         
 
-    pygame.display.update()
+    pygame.display.update() #UPDATE SCREEN
     
-pygame.quit()
+pygame.quit() #QUIT
 
        
 
