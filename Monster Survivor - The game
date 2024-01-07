@@ -32,12 +32,13 @@ DEATH = pygame.image.load('BOOM.png')
 x = (SCREEN_WIDTH * 0.95)
 y = (SCREEN_HEIGHT * 0.5)
 player_move_amount = 10
+x_change = 0
 y_change = 0
 player_x_pos = (SCREEN_WIDTH * 0.5)
 player_y_pos = 300
 enemy_x_pos = 0
 enemy_y_pos = randrange(600)
-enemy_speed = 2
+enemy_speed = 5
 
 #DEFINES
 def add_enemy_at_position(x,y):
@@ -85,6 +86,7 @@ while running:
     
     #QUIT
     y_change = 0
+    x_change = 0
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT: 
@@ -94,9 +96,14 @@ while running:
                 y_change = -30
             elif event.key == pygame.K_DOWN and player_y_pos <= 600: #PLAYER DOWN
                 y_change = 30
+            elif event.key == pygame.K_RIGHT and player_x_pos <= 700: #PLAYER RIGHT
+                x_change = 30
+            elif event.key == pygame.K_LEFT and player_x_pos >= 0: #PLAYER LEFT
+                x_change = -30
         
         
         player_y_pos += y_change
+        player_x_pos += x_change
          
         
     enemy_x_pos += enemy_speed #ENEMY SPEED
